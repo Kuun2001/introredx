@@ -1,11 +1,9 @@
 import React, { useState } from "react";
-import { Container, Button, Typography, Box, Grid } from "@mui/material"
 import productOne from "../images/product1.gif";
 import productTwo from "../images/product2.gif";
 import ReactJson from "react-json-view";
-import WrapperBox from "../components/WrapperBox"
-
-
+import WrapperBox from "../components/WrapperBox";
+import { Container, Button, Typography, Box, Grid } from "@mui/material"
 
 const RootComponent = (props) => {
   // eslint-disable-next-line
@@ -13,7 +11,6 @@ const RootComponent = (props) => {
     { id: "p1", title: "Product 1", price: 1999 },
     { id: "p2", title: "Product 2", price: 999 },
   ]);
-  // eslint-disable-next-line
   const [cart, setCart] = useState({
     products: [
       { id: "p1", title: "Product 1", price: 0, qty: 0 },
@@ -21,79 +18,65 @@ const RootComponent = (props) => {
     ],
     totalPrice: 0,
   });
-  const addProductToCart = (product) => {
+
+  const addProductToCart = (newProduct) => {
     const newProductList = cart.products.map((cartProduct) => {
-      if (cartProduct.id === product.id) {
+      if (cartProduct.id === newProduct.id) {
         cartProduct.qty += 1;
-        cartProduct.price += product.price;
+        cartProduct.price += newProduct.price;
       }
       return cartProduct;
     });
-    const newTotalPrice = cart.totalPrice + product.price;
+    const newTotalPrice = cart.totalPrice + newProduct.price;
     setCart({ products: newProductList, totalPrice: newTotalPrice });
   };
- 
-  const removeProductFromCart = (product) => {
+
+  const removeProductFromCart = (removedProduct) => {
+    let newTotalPrice = cart.totalPrice;
     const newProductList = cart.products.map((cartProduct) => {
-      if (cartProduct.id === product.id && cartProduct.qty > 0) {
+      if (cartProduct.id === removedProduct.id && cartProduct.qty > 0) {
         cartProduct.qty -= 1;
-        cartProduct.price -= product.price;
+        cartProduct.price -= removedProduct.price;
+        newTotalPrice -= removedProduct.price;
       }
       return cartProduct;
     });
-    const newTotalPrice = cart.totalPrice - product.price;
     setCart({ products: newProductList, totalPrice: newTotalPrice });
   };
-    // eslint-disable-next-line
-  // Step 0 Read and understand the structure of the app
-
-  // Step 1
-  // Write a function called addProductToCart() that takes a product object as an argument
-  // Example newProduct = { id: "p1", title: "Product 1", price: 1999 }
-  // The function will add one new product into the cart
-
-
-  // Step 2
-  // Write a function called removeProductFromCart() that takes a product object as an argument
-  // Example removedProduct = { id: "p1", title: "Product 1", price: 1999 }
-  // The function will remove one product from the cart. The min value of quantity is 0
-
-  // Step 3
-  // Pass the functions to the product components to handle the click event of the Add/Remove buttons
 
   return (
     <WrapperBox>
-    <Typography p="0.5rem" variant="h5" sx={{ backgroundColor: "primary.main", color: "primary.contrastText" }}>
+      <Typography p="0.5rem" variant="h5" sx={{ backgroundColor: "primary.main", color: "primary.contrastText" }}>
 
-      RootComponent {`({`}
-      <Box component="span" sx={{ color: "warning.main" }}>{Object.keys(props).join(", ")}</Box>
-      {`})`}
-    </Typography>
-    <Box sx={{ textAlign: "start" }}>
-      <ReactJson
-        name="state"
-        src={{ products, cart }}
-        collapsed={true}
-        theme="monokai"
-        displayDataTypes={false}
-        displayObjectSize={false}
-      />
-    </Box>
-    <Grid container spacing={2} p="1rem">
-      <Grid item sm={6}>
-
-        <ProductPage
-          products={products}
-          addProduct={addProductToCart}
-          removeProduct={removeProductFromCart}
+        RootComponent {`({`}
+        <Box component="span" sx={{ color: "warning.main" }}>{Object.keys(props).join(", ")}</Box>
+        {`})`}
+      </Typography>
+      <Box sx={{ textAlign: "start" }}>
+        <ReactJson
+          name="state"
+          src={{ products, cart }}
+          collapsed={true}
+          theme="monokai"
+          displayDataTypes={false}
+          displayObjectSize={false}
         />
-      </Grid>
-      <Grid item sm={6}>
+      </Box>
+      <Grid container spacing={2} p="1rem">
+        <Grid item sm={6}>
 
-        <CartPage cart={cart} />
+          <ProductPage
+            products={products}
+            addProduct={addProductToCart}
+            removeProduct={removeProductFromCart}
+          />
+        </Grid>
+        <Grid item sm={6}>
+
+          <CartPage cart={cart} />
+        </Grid>
       </Grid>
-    </Grid>
-  </WrapperBox>
+    </WrapperBox>
   );
 };
 
@@ -125,6 +108,7 @@ const ProductPage = (props) => {
     </WrapperBox>
   );
 };
+
 const CartPage = (props) => {
   return (
     <WrapperBox>
@@ -160,13 +144,24 @@ const ProductOne = (props) => {
         <Grid item xs={8}>
           <img src={productOne} alt="Product One" width="100%" />
           <Typography p="0.5rem" variant="h6" sx={{ color: "success.main" }}>💵 {props.product.price}</Typography>
+
         </Grid>
         <Grid item xs={8} >
           <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <Button variant="success" sx={{ width: "5rem" }} onClick={() => props.addProductProduct(props.product)}>
+            <Button
+              variant="success"
+              size="sm"
+              style={{ width: "5rem" }}
+              onClick={() => props.addProduct(props.product)}
+            >
               Add
             </Button>
-            <Button variant="error" sx={{ width: "5rem" }} onClick={() => props.removeProduct(props.product)}>
+            <Button
+              variant="error"
+              size="sm"
+              style={{ width: "5rem" }}
+              onClick={() => props.removeProduct(props.product)}
+            >
               Remove
             </Button>
           </div>
@@ -177,7 +172,6 @@ const ProductOne = (props) => {
 };
 
 const ProductTwo = (props) => {
-
   return (
     <WrapperBox>
       <Typography p="0.5rem" variant="h5" sx={{ backgroundColor: "primary.main", color: "primary.contrastText" }}>
@@ -189,13 +183,24 @@ const ProductTwo = (props) => {
         <Grid item xs={8}>
           <img src={productTwo} alt="Product Two" width="100%" />
           <Typography p="0.5rem" variant="h5" sx={{ color: "success.main" }}>💵 {props.product.price}</Typography>
+
         </Grid>
         <Grid item xs={8} >
           <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <Button variant="success" size="sm" style={{ width: "5rem" }} onClick={() => props.addProduct(props.product)}>
+            <Button
+              variant="success"
+              size="sm"
+              style={{ width: "5rem" }}
+              onClick={() => props.addProduct(props.product)}
+            >
               Add
             </Button>
-            <Button variant="error" size="sm" style={{ width: "5rem" }} onClick={() => props.removeProduct(props.product)}>
+            <Button
+              variant="error"
+              size="sm"
+              style={{ width: "5rem" }}
+              onClick={() => props.removeProduct(props.product)}
+            >
               Remove
             </Button>
           </div>
@@ -237,7 +242,7 @@ const CartProductTwo = (props) => {
   );
 };
 
-const PropDrillingExercise = () => {
+const PropDrillingFinal = () => {
   return (
     <Container>
       <br />
@@ -248,4 +253,4 @@ const PropDrillingExercise = () => {
   );
 };
 
-export default PropDrillingExercise;
+export default PropDrillingFinal;
